@@ -39,13 +39,16 @@ class MainActivity : AppCompatActivity() {
         val directory = File(folderrecord.absolutePath, "/Call")
         val files: Array<File>? = directory.listFiles()
         val filenamesToShow = mutableListOf("")
+        val filenamesToUpload = mutableListOf("")
         val diramesToShow = mutableListOf("")
         if (files != null) {
             Log.d("FileList", "Total files found: ${files.size}")
             for (file in files) {
                 if (file.isFile) {
                     Log.d("FileList", "File Name: ${file.name}, Path: ${file.absolutePath}")
-                    filenamesToShow.add(file.name)
+                    Log.d("FileList", "File -- : ${displayFileData(file.name)}")
+                    filenamesToShow.add(displayFileData(file.name))
+                    filenamesToShow.add(file.absolutePath)
                 } else if (file.isDirectory) {
                     Log.d("FileList", "Directory Name: ${file.name}")
                     diramesToShow.add("Dir - " + file.name)
@@ -60,20 +63,21 @@ class MainActivity : AppCompatActivity() {
         val listView: ListView = findViewById(R.id.user_list)
         arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, filenamesToShow)
         listView.adapter = arrayAdapter
-//        setSupportActionBar(binding.toolbar)
-//
-//        val navController = findNavController(R.id.nav_host_fragment_content_main)
-//        appBarConfiguration = AppBarConfiguration(navController.graph)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-//
-//        binding.fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null)
-//                .setAnchorView(R.id.fab).show()
-//        }
-    }
-    fun displayFileData() {
 
+    }
+    fun displayFileData(fName: String): String {
+        val rem = fName.replace("Call recording", "")
+        val spl = rem.split("_")
+        val nm = spl[0]
+        val dat = spl[1]
+        val tm = spl[2]
+        val newdatyr = dat.substring(0..1)
+        val newdatmon = dat.substring(2..3)
+        val newdatdd = dat.substring(4..5)
+        Log.d("FileList",newdatdd)
+        Log.d("FileList",newdatmon)
+        Log.d("FileList",newdatyr)
+        return "$nm - Date: ${newdatdd}-${newdatmon}-${newdatyr}"
     }
 
 
