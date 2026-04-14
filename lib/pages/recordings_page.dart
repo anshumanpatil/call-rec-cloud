@@ -105,10 +105,11 @@ class _RecordingsPageState extends State<RecordingsPage> {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                 onPressed: () {
                   // TODO: Implement uploads functionality
                 },
-                child: const Text(AppStrings.uploadsButton),
+                child: const Text(AppStrings.uploadButton),
               ),
             ),
           ),
