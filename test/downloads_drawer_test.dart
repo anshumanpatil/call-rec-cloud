@@ -4,8 +4,9 @@ import 'package:cll_upld/widgets/downloads_drawer.dart';
 
 void main() {
   group('DownloadsDrawer Tests', () {
-    testWidgets('DownloadsDrawer is a StatelessWidget',
-        (WidgetTester tester) async {
+    testWidgets('DownloadsDrawer is a StatelessWidget', (
+      WidgetTester tester,
+    ) async {
       final drawer = DownloadsDrawer(
         applicationName: 'Test App',
         onRefresh: () {},
@@ -16,7 +17,9 @@ void main() {
       expect(drawer, isA<StatelessWidget>());
     });
 
-    testWidgets('DownloadsDrawer can be instantiated', (WidgetTester tester) async {
+    testWidgets('DownloadsDrawer can be instantiated', (
+      WidgetTester tester,
+    ) async {
       final drawer = DownloadsDrawer(
         applicationName: 'Test App',
         onRefresh: () {},
@@ -27,8 +30,9 @@ void main() {
       expect(drawer, isNotNull);
     });
 
-    testWidgets('DownloadsDrawer widget structure is correct',
-        (WidgetTester tester) async {
+    testWidgets('DownloadsDrawer widget structure is correct', (
+      WidgetTester tester,
+    ) async {
       final drawer = DownloadsDrawer(
         applicationName: 'Test App',
         onRefresh: () {},
@@ -39,10 +43,7 @@ void main() {
       // Build the drawer directly to inspect its structure
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            drawer: drawer,
-            body: Container(),
-          ),
+          home: Scaffold(drawer: drawer, body: Container()),
         ),
       );
 
@@ -56,8 +57,9 @@ void main() {
       expect(find.byType(Drawer), findsOneWidget);
     });
 
-    testWidgets('DownloadsDrawer displays menu items when opened',
-        (WidgetTester tester) async {
+    testWidgets('DownloadsDrawer displays menu items when opened', (
+      WidgetTester tester,
+    ) async {
       final drawer = DownloadsDrawer(
         applicationName: 'Test App',
         onRefresh: () {},
@@ -67,10 +69,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            drawer: drawer,
-            body: Container(),
-          ),
+          home: Scaffold(drawer: drawer, body: Container()),
         ),
       );
 
@@ -86,7 +85,9 @@ void main() {
       expect(find.text('Settings'), findsOneWidget);
     });
 
-    testWidgets('DownloadsDrawer has proper icons', (WidgetTester tester) async {
+    testWidgets('DownloadsDrawer has proper icons', (
+      WidgetTester tester,
+    ) async {
       final drawer = DownloadsDrawer(
         applicationName: 'Test App',
         onRefresh: () {},
@@ -96,10 +97,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            drawer: drawer,
-            body: Container(),
-          ),
+          home: Scaffold(drawer: drawer, body: Container()),
         ),
       );
 
@@ -112,8 +110,9 @@ void main() {
       expect(find.byIcon(Icons.settings), findsOneWidget);
     });
 
-    testWidgets('DownloadsDrawer onRefresh callback works',
-        (WidgetTester tester) async {
+    testWidgets('DownloadsDrawer onRefresh callback works', (
+      WidgetTester tester,
+    ) async {
       bool refreshCalled = false;
 
       final drawer = DownloadsDrawer(
@@ -125,10 +124,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            drawer: drawer,
-            body: Container(),
-          ),
+          home: Scaffold(drawer: drawer, body: Container()),
         ),
       );
 
@@ -142,8 +138,9 @@ void main() {
       expect(refreshCalled, isTrue);
     });
 
-    testWidgets('DownloadsDrawer onAbout callback works',
-        (WidgetTester tester) async {
+    testWidgets('DownloadsDrawer onAbout callback works', (
+      WidgetTester tester,
+    ) async {
       bool aboutCalled = false;
 
       final drawer = DownloadsDrawer(
@@ -155,10 +152,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            drawer: drawer,
-            body: Container(),
-          ),
+          home: Scaffold(drawer: drawer, body: Container()),
         ),
       );
 
@@ -172,8 +166,9 @@ void main() {
       expect(aboutCalled, isTrue);
     });
 
-    testWidgets('DownloadsDrawer onSettings callback works',
-        (WidgetTester tester) async {
+    testWidgets('DownloadsDrawer onSettings callback works', (
+      WidgetTester tester,
+    ) async {
       bool settingsCalled = false;
 
       final drawer = DownloadsDrawer(
@@ -185,10 +180,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            drawer: drawer,
-            body: Container(),
-          ),
+          home: Scaffold(drawer: drawer, body: Container()),
         ),
       );
 
@@ -202,8 +194,9 @@ void main() {
       expect(settingsCalled, isTrue);
     });
 
-    testWidgets('DownloadsDrawer drawer closes after menu tap',
-        (WidgetTester tester) async {
+    testWidgets('DownloadsDrawer drawer closes after menu tap', (
+      WidgetTester tester,
+    ) async {
       final drawer = DownloadsDrawer(
         applicationName: 'Test App',
         onRefresh: () {},
@@ -213,10 +206,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            drawer: drawer,
-            body: Container(),
-          ),
+          home: Scaffold(drawer: drawer, body: Container()),
         ),
       );
 
@@ -232,7 +222,9 @@ void main() {
       expect(find.byType(Drawer), findsNothing);
     });
 
-    testWidgets('DownloadsDrawer required parameters', (WidgetTester tester) async {
+    testWidgets('DownloadsDrawer required parameters', (
+      WidgetTester tester,
+    ) async {
       // Verify all parameters are required
       expect(
         () => DownloadsDrawer(
@@ -245,8 +237,9 @@ void main() {
       );
     });
 
-    testWidgets('DownloadsDrawer with different applicationName',
-        (WidgetTester tester) async {
+    testWidgets('DownloadsDrawer with different applicationName', (
+      WidgetTester tester,
+    ) async {
       final drawer = DownloadsDrawer(
         applicationName: 'Custom App',
         onRefresh: () {},

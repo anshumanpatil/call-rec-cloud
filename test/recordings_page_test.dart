@@ -6,12 +6,11 @@ import 'package:cll_upld/pages/recordings_page.dart';
 
 void main() {
   group('RecordingsPage Tests', () {
-    testWidgets('RecordingsPage renders with title',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsPage renders with title', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'Test Recordings'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'Test Recordings')),
       );
 
       // Verify the widget is rendered
@@ -21,9 +20,7 @@ void main() {
 
     testWidgets('AppBar displays correct title', (WidgetTester tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'My Recordings'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'My Recordings')),
       );
 
       // Verify AppBar title
@@ -31,12 +28,11 @@ void main() {
       expect(find.text('My Recordings'), findsOneWidget);
     });
 
-    testWidgets('Floating action button is displayed',
-        (WidgetTester tester) async {
+    testWidgets('Floating action button is displayed', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'Recordings'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'Recordings')),
       );
 
       // Verify floating action button exists
@@ -44,11 +40,11 @@ void main() {
       expect(find.byIcon(Icons.refresh), findsOneWidget);
     });
 
-    testWidgets('Scaffold drawer parameter is set', (WidgetTester tester) async {
+    testWidgets('Scaffold drawer parameter is set', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'Recordings'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'Recordings')),
       );
 
       // Verify scaffold has drawer by checking scaffold widget
@@ -59,12 +55,11 @@ void main() {
       expect(scaffold.drawer, isNotNull);
     });
 
-    testWidgets('Loading indicator is shown initially',
-        (WidgetTester tester) async {
+    testWidgets('Loading indicator is shown initially', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'Recordings'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'Recordings')),
       );
 
       // Pump once to trigger initState
@@ -76,23 +71,20 @@ void main() {
 
     testWidgets('FAB tooltip shows Refresh', (WidgetTester tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'Recordings'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'Recordings')),
       );
 
       // Verify FAB tooltip
       expect(find.byTooltip('Refresh'), findsOneWidget);
     });
 
-    testWidgets('RecordingsPage accepts title parameter',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsPage accepts title parameter', (
+      WidgetTester tester,
+    ) async {
       const String testTitle = 'Workout Recordings';
 
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: testTitle),
-        ),
+        const MaterialApp(home: RecordingsPage(title: testTitle)),
       );
 
       // Verify the title is displayed
@@ -101,9 +93,7 @@ void main() {
 
     testWidgets('Scaffold has proper structure', (WidgetTester tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'Recordings'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'Recordings')),
       );
 
       // Verify scaffold components
@@ -114,22 +104,19 @@ void main() {
 
     testWidgets('Page builds without errors', (WidgetTester tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'Test'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'Test')),
       );
 
       // No exceptions should be thrown during build
       expect(find.byType(RecordingsPage), findsOneWidget);
     });
 
-    testWidgets('AppBar has correct background color',
-        (WidgetTester tester) async {
+    testWidgets('AppBar has correct background color', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: ThemeData(
-            useMaterial3: true,
-          ),
+          theme: ThemeData(useMaterial3: true),
           home: const RecordingsPage(title: 'Recordings'),
         ),
       );
@@ -138,12 +125,11 @@ void main() {
       expect(find.byType(AppBar), findsOneWidget);
     });
 
-    testWidgets('Floating action button has correct icon',
-        (WidgetTester tester) async {
+    testWidgets('Floating action button has correct icon', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'Recordings'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'Recordings')),
       );
 
       // Verify refresh icon in FAB
@@ -154,13 +140,12 @@ void main() {
       expect(iconFinder, findsOneWidget);
     });
 
-    testWidgets('Widget title property is required',
-        (WidgetTester tester) async {
+    testWidgets('Widget title property is required', (
+      WidgetTester tester,
+    ) async {
       // This test verifies that the title is a required parameter
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'Required Title'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'Required Title')),
       );
 
       expect(find.byType(RecordingsPage), findsOneWidget);
@@ -169,9 +154,7 @@ void main() {
 
     testWidgets('Page is a StatefulWidget', (WidgetTester tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'Recordings'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'Recordings')),
       );
 
       // RecordingsPage is a StatefulWidget, verify it builds and manages state
@@ -182,9 +165,7 @@ void main() {
       const String testTitle = 'Test Recordings Title';
 
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: testTitle),
-        ),
+        const MaterialApp(home: RecordingsPage(title: testTitle)),
       );
 
       // Verify scaffold and appbar structure
@@ -195,21 +176,16 @@ void main() {
       expect(scaffold.appBar, isNotNull);
     });
 
-    testWidgets('Page updates when title changes',
-        (WidgetTester tester) async {
+    testWidgets('Page updates when title changes', (WidgetTester tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'Initial Title'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'Initial Title')),
       );
 
       expect(find.text('Initial Title'), findsOneWidget);
 
       // Rebuild with new title
       await tester.pumpWidget(
-        const MaterialApp(
-          home: RecordingsPage(title: 'Updated Title'),
-        ),
+        const MaterialApp(home: RecordingsPage(title: 'Updated Title')),
       );
 
       expect(find.text('Updated Title'), findsOneWidget);

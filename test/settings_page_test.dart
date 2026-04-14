@@ -5,11 +5,7 @@ import 'package:cll_upld/pages/settings_page.dart';
 void main() {
   group('SettingsPage Tests', () {
     testWidgets('SettingsPage renders correctly', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: SettingsPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: SettingsPage()));
 
       // Verify the widget is rendered
       expect(find.byType(SettingsPage), findsOneWidget);
@@ -17,11 +13,7 @@ void main() {
     });
 
     testWidgets('AppBar displays correct title', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: SettingsPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: SettingsPage()));
 
       // Verify AppBar title
       expect(find.byType(AppBar), findsOneWidget);
@@ -29,11 +21,7 @@ void main() {
     });
 
     testWidgets('Page displays main heading', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: SettingsPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: SettingsPage()));
 
       // Verify the main heading is displayed
       final headingFinder = find.text('Settings');
@@ -41,11 +29,7 @@ void main() {
     });
 
     testWidgets('Page displays description text', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: SettingsPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: SettingsPage()));
 
       // Verify description
       expect(
@@ -54,12 +38,10 @@ void main() {
       );
     });
 
-    testWidgets('Return to main button is displayed', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: SettingsPage(),
-        ),
-      );
+    testWidgets('Return to main button is displayed', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const MaterialApp(home: SettingsPage()));
 
       // Verify button exists
       expect(find.byType(TextButton), findsOneWidget);
@@ -67,7 +49,9 @@ void main() {
       expect(find.byIcon(Icons.arrow_back), findsOneWidget);
     });
 
-    testWidgets('Return to main button is tappable', (WidgetTester tester) async {
+    testWidgets('Return to main button is tappable', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: WillPopScope(
@@ -89,11 +73,7 @@ void main() {
     });
 
     testWidgets('Main heading has correct style', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: SettingsPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: SettingsPage()));
 
       // Find the main heading Text widget
       final heading = find.text('Settings').first;
@@ -105,16 +85,15 @@ void main() {
       expect(textWidget.style?.fontWeight, FontWeight.bold);
     });
 
-    testWidgets('Description text has correct style', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: SettingsPage(),
-        ),
-      );
+    testWidgets('Description text has correct style', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const MaterialApp(home: SettingsPage()));
 
       // Find description text
-      final description =
-          find.text('Manage app preferences and permissions here.');
+      final description = find.text(
+        'Manage app preferences and permissions here.',
+      );
 
       expect(description, findsOneWidget);
 
@@ -123,12 +102,10 @@ void main() {
       expect(text.style?.fontSize, 16);
     });
 
-    testWidgets('Page layout structure is correct', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: SettingsPage(),
-        ),
-      );
+    testWidgets('Page layout structure is correct', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const MaterialApp(home: SettingsPage()));
 
       // Verify the Column exists with correct structure
       expect(find.byType(Column), findsWidgets);
@@ -140,13 +117,10 @@ void main() {
       expect(find.byType(SizedBox), findsWidgets);
     });
 
-    testWidgets('All widgets are present in hierarchy',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: SettingsPage(),
-        ),
-      );
+    testWidgets('All widgets are present in hierarchy', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const MaterialApp(home: SettingsPage()));
 
       // Verify all key widgets are in the widget tree
       expect(find.byType(Scaffold), findsOneWidget);
@@ -157,12 +131,10 @@ void main() {
       expect(find.byType(TextButton), findsOneWidget);
     });
 
-    testWidgets('Button icon and label are correct', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: SettingsPage(),
-        ),
-      );
+    testWidgets('Button icon and label are correct', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const MaterialApp(home: SettingsPage()));
 
       // Verify button contains both icon and label
       expect(find.byIcon(Icons.arrow_back), findsOneWidget);
@@ -174,11 +146,7 @@ void main() {
     });
 
     testWidgets('Page content is properly padded', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: SettingsPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: SettingsPage()));
 
       // Find the Padding widget that wraps the Column
       final paddingFinder = find.byType(Padding);

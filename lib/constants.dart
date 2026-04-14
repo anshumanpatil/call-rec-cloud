@@ -1,4 +1,3 @@
-
 class RecordingsRepositoryConstants {
   static const String downloadsDirectoryType = "RECORDINGS/CALL";
   static const String unableToDetermineDownloadsFolder =

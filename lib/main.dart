@@ -22,8 +22,9 @@ class MyApp extends StatelessWidget {
       initialRoute: AppRoutes.splash,
       routes: {
         AppRoutes.splash: (context) => const SplashScreen(),
-        AppRoutes.home: (context) =>
-            const RecordingsPage(title: RecordingsRepositoryConstants.homeTitle  ),
+        AppRoutes.home: (context) => const RecordingsPage(
+          title: RecordingsRepositoryConstants.homeTitle,
+        ),
         AppRoutes.about: (context) => const AboutUsPage(),
         AppRoutes.settings: (context) => const SettingsPage(),
       },

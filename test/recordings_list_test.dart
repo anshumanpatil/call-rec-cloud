@@ -6,8 +6,9 @@ import 'package:cll_upld/widgets/recordings_list.dart';
 
 void main() {
   group('RecordingsListView Tests', () {
-    testWidgets('RecordingsListView renders with minimal parameters',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView renders with minimal parameters', (
+      WidgetTester tester,
+    ) async {
       final mockFile = File('/test.txt');
 
       await tester.pumpWidget(
@@ -27,8 +28,9 @@ void main() {
       expect(find.byType(RecordingsListView), findsOneWidget);
     });
 
-    testWidgets('RecordingsListView displays as ListView',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView displays as ListView', (
+      WidgetTester tester,
+    ) async {
       final mockFile = File('/test.txt');
 
       await tester.pumpWidget(
@@ -48,8 +50,9 @@ void main() {
       expect(find.byType(ListView), findsOneWidget);
     });
 
-    testWidgets('RecordingsListView displays Select All checkbox',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView displays Select All checkbox', (
+      WidgetTester tester,
+    ) async {
       final mockFile = File('/test.txt');
 
       await tester.pumpWidget(
@@ -70,8 +73,9 @@ void main() {
       expect(find.byType(CheckboxListTile), findsWidgets);
     });
 
-    testWidgets('RecordingsListView displays file items',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView displays file items', (
+      WidgetTester tester,
+    ) async {
       final mockFile = File('/test.txt');
 
       await tester.pumpWidget(
@@ -91,8 +95,9 @@ void main() {
       expect(find.text('test.txt'), findsOneWidget);
     });
 
-    testWidgets('RecordingsListView shows file icon for files',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView shows file icon for files', (
+      WidgetTester tester,
+    ) async {
       final mockFile = File('/test.txt');
 
       await tester.pumpWidget(
@@ -112,8 +117,9 @@ void main() {
       expect(find.byIcon(Icons.insert_drive_file), findsOneWidget);
     });
 
-    testWidgets('RecordingsListView shows folder icon for directories',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView shows folder icon for directories', (
+      WidgetTester tester,
+    ) async {
       // Create a mock directory
       final mockDir = Directory('/test_dir');
 
@@ -134,87 +140,95 @@ void main() {
       expect(find.byIcon(Icons.folder), findsOneWidget);
     });
 
-    testWidgets('RecordingsListView calls onToggleSelectAll when clicking Select All',
-        (WidgetTester tester) async {
-      int toggleSelectAllCount = 0;
-      final mockFile = File('/test.txt');
+    testWidgets(
+      'RecordingsListView calls onToggleSelectAll when clicking Select All',
+      (WidgetTester tester) async {
+        int toggleSelectAllCount = 0;
+        final mockFile = File('/test.txt');
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: RecordingsListView(
-              recordings: [mockFile],
-              selectedItems: [false],
-              allSelected: false,
-              onToggleSelectAll: () => toggleSelectAllCount++,
-              onSelectedChanged: (_) {},
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: RecordingsListView(
+                recordings: [mockFile],
+                selectedItems: [false],
+                allSelected: false,
+                onToggleSelectAll: () => toggleSelectAllCount++,
+                onSelectedChanged: (_) {},
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      // Find and tap the Select All checkbox
-      final checkboxes = find.byType(CheckboxListTile);
-      await tester.tap(checkboxes.first);
-      await tester.pumpAndSettle();
+        // Find and tap the Select All checkbox
+        final checkboxes = find.byType(CheckboxListTile);
+        await tester.tap(checkboxes.first);
+        await tester.pumpAndSettle();
 
-      expect(toggleSelectAllCount, 1);
-    });
+        expect(toggleSelectAllCount, 1);
+      },
+    );
 
-    testWidgets('RecordingsListView calls onSelectedChanged when selecting file',
-        (WidgetTester tester) async {
-      int selectedFileIndex = -1;
-      final mockFile = File('/test.txt');
+    testWidgets(
+      'RecordingsListView calls onSelectedChanged when selecting file',
+      (WidgetTester tester) async {
+        int selectedFileIndex = -1;
+        final mockFile = File('/test.txt');
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: RecordingsListView(
-              recordings: [mockFile],
-              selectedItems: [false],
-              allSelected: false,
-              onToggleSelectAll: () {},
-              onSelectedChanged: (index) => selectedFileIndex = index,
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: RecordingsListView(
+                recordings: [mockFile],
+                selectedItems: [false],
+                allSelected: false,
+                onToggleSelectAll: () {},
+                onSelectedChanged: (index) => selectedFileIndex = index,
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      // Find and tap the file checkbox
-      final checkboxes = find.byType(CheckboxListTile);
-      await tester.tap(checkboxes.at(1)); // Second checkbox is the file
-      await tester.pumpAndSettle();
+        // Find and tap the file checkbox
+        final checkboxes = find.byType(CheckboxListTile);
+        await tester.tap(checkboxes.at(1)); // Second checkbox is the file
+        await tester.pumpAndSettle();
 
-      expect(selectedFileIndex, 0);
-    });
+        expect(selectedFileIndex, 0);
+      },
+    );
 
-    testWidgets('RecordingsListView Select All checkbox state reflects allSelected',
-        (WidgetTester tester) async {
-      final mockFile = File('/test.txt');
+    testWidgets(
+      'RecordingsListView Select All checkbox state reflects allSelected',
+      (WidgetTester tester) async {
+        final mockFile = File('/test.txt');
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: RecordingsListView(
-              recordings: [mockFile],
-              selectedItems: [true],
-              allSelected: true,
-              onToggleSelectAll: () {},
-              onSelectedChanged: (_) {},
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: RecordingsListView(
+                recordings: [mockFile],
+                selectedItems: [true],
+                allSelected: true,
+                onToggleSelectAll: () {},
+                onSelectedChanged: (_) {},
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      // The Select All checkbox should be checked
-      final checkboxes = find.byType(CheckboxListTile);
-      final selectAllCheckbox =
-          tester.widget<CheckboxListTile>(checkboxes.first);
-      expect(selectAllCheckbox.value, isTrue);
-    });
+        // The Select All checkbox should be checked
+        final checkboxes = find.byType(CheckboxListTile);
+        final selectAllCheckbox = tester.widget<CheckboxListTile>(
+          checkboxes.first,
+        );
+        expect(selectAllCheckbox.value, isTrue);
+      },
+    );
 
-    testWidgets('RecordingsListView file checkbox reflects selectedItems',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView file checkbox reflects selectedItems', (
+      WidgetTester tester,
+    ) async {
       final mockFile = File('/test.txt');
 
       await tester.pumpWidget(
@@ -237,8 +251,9 @@ void main() {
       expect(fileCheckbox.value, isTrue);
     });
 
-    testWidgets('RecordingsListView handles multiple files',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView handles multiple files', (
+      WidgetTester tester,
+    ) async {
       final file1 = File('/file1.txt');
       final file2 = File('/file2.txt');
       final file3 = File('/file3.txt');
@@ -266,8 +281,9 @@ void main() {
       expect(checkboxes, findsWidgets);
     });
 
-    testWidgets('RecordingsListView extracts filename correctly from path',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView extracts filename correctly from path', (
+      WidgetTester tester,
+    ) async {
       final mockFile = File('/path/to/nested/file.txt');
 
       await tester.pumpWidget(
@@ -287,8 +303,9 @@ void main() {
       expect(find.text('file.txt'), findsOneWidget);
     });
 
-    testWidgets('RecordingsListView with empty list shows Select All only',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView with empty list shows Select All only', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -308,8 +325,9 @@ void main() {
       expect(find.byIcon(Icons.folder), findsNothing);
     });
 
-    testWidgets('RecordingsListView checkbox callbacks work correctly',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView checkbox callbacks work correctly', (
+      WidgetTester tester,
+    ) async {
       int fileSelectedCount = 0;
       final file1 = File('/file1.txt');
       final file2 = File('/file2.txt');
@@ -341,8 +359,9 @@ void main() {
       expect(fileSelectedCount, 2);
     });
 
-    testWidgets('RecordingsListView is a StatelessWidget',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView is a StatelessWidget', (
+      WidgetTester tester,
+    ) async {
       final mockFile = File('/test.txt');
       final widget = RecordingsListView(
         recordings: [mockFile],
@@ -355,8 +374,9 @@ void main() {
       expect(widget, isA<StatelessWidget>());
     });
 
-    testWidgets('RecordingsListView has required parameters',
-        (WidgetTester tester) async {
+    testWidgets('RecordingsListView has required parameters', (
+      WidgetTester tester,
+    ) async {
       final mockFile = File('/test.txt');
 
       // Verify that creating the widget with all required parameters works

@@ -5,11 +5,7 @@ import 'package:cll_upld/pages/about_us_page.dart';
 void main() {
   group('AboutUsPage Tests', () {
     testWidgets('AboutUsPage renders correctly', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AboutUsPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: AboutUsPage()));
 
       // Verify the widget is rendered
       expect(find.byType(AboutUsPage), findsOneWidget);
@@ -17,11 +13,7 @@ void main() {
     });
 
     testWidgets('AppBar displays correct title', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AboutUsPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: AboutUsPage()));
 
       // Verify AppBar title
       expect(find.byType(AppBar), findsOneWidget);
@@ -29,11 +21,7 @@ void main() {
     });
 
     testWidgets('Page displays main heading', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AboutUsPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: AboutUsPage()));
 
       // Verify the main heading is displayed
       final headingFinder = find.text('About Us');
@@ -41,31 +29,29 @@ void main() {
     });
 
     testWidgets('Page displays description texts', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AboutUsPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: AboutUsPage()));
 
       // Verify first description
       expect(
-        find.text('This app helps you browse your downloads directory in one place.'),
+        find.text(
+          'This app helps you browse your downloads directory in one place.',
+        ),
         findsOneWidget,
       );
 
       // Verify second description
       expect(
-        find.text('You can refresh downloads, inspect files, and manage selections.'),
+        find.text(
+          'You can refresh downloads, inspect files, and manage selections.',
+        ),
         findsOneWidget,
       );
     });
 
-    testWidgets('Return to main button is displayed', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AboutUsPage(),
-        ),
-      );
+    testWidgets('Return to main button is displayed', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const MaterialApp(home: AboutUsPage()));
 
       // Verify button exists
       expect(find.byType(TextButton), findsOneWidget);
@@ -73,7 +59,9 @@ void main() {
       expect(find.byIcon(Icons.arrow_back), findsOneWidget);
     });
 
-    testWidgets('Return to main button navigates back', (WidgetTester tester) async {
+    testWidgets('Return to main button navigates back', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: WillPopScope(
@@ -96,11 +84,7 @@ void main() {
     });
 
     testWidgets('Page layout is correct', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AboutUsPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: AboutUsPage()));
 
       // Verify the main Column exists
       expect(find.byType(Column), findsWidgets);
@@ -113,11 +97,7 @@ void main() {
     });
 
     testWidgets('Text styling is correct', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AboutUsPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: AboutUsPage()));
 
       // Find the main heading Text widget
       final heading = find.text('About Us').first;
@@ -129,19 +109,18 @@ void main() {
       expect(textWidget.style?.fontWeight, FontWeight.bold);
     });
 
-    testWidgets('Description texts have correct styling',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AboutUsPage(),
-        ),
-      );
+    testWidgets('Description texts have correct styling', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const MaterialApp(home: AboutUsPage()));
 
       // Find description texts
       final description1 = find.text(
-          'This app helps you browse your downloads directory in one place.');
+        'This app helps you browse your downloads directory in one place.',
+      );
       final description2 = find.text(
-          'You can refresh downloads, inspect files, and manage selections.');
+        'You can refresh downloads, inspect files, and manage selections.',
+      );
 
       expect(description1, findsOneWidget);
       expect(description2, findsOneWidget);
@@ -154,12 +133,10 @@ void main() {
       expect(text2.style?.fontSize, 16);
     });
 
-    testWidgets('All widgets are present in hierarchy', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AboutUsPage(),
-        ),
-      );
+    testWidgets('All widgets are present in hierarchy', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const MaterialApp(home: AboutUsPage()));
 
       // Verify all key widgets are in the widget tree
       expect(find.byType(Scaffold), findsOneWidget);
