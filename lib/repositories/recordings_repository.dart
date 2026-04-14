@@ -4,7 +4,7 @@ import 'package:external_path/external_path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'downloads_constants.dart';
+import '../constants.dart';
 
 class DownloadsRepository {
   Future<bool> hasManageExternalStoragePermission() async {
@@ -21,7 +21,7 @@ class DownloadsRepository {
     if (Platform.isAndroid || Platform.isIOS) {
       final downloadsPath =
           await ExternalPath.getExternalStoragePublicDirectory(
-            DownloadsRepositoryConstants.downloadsDirectoryType,
+            RecordingsRepositoryConstants.downloadsDirectoryType,
           );
       return Directory(downloadsPath);
     }
@@ -34,13 +34,13 @@ class DownloadsRepository {
 
     if (downloadsDir == null) {
       throw Exception(
-        DownloadsRepositoryConstants.unableToDetermineDownloadsFolder,
+        RecordingsRepositoryConstants.unableToDetermineDownloadsFolder,
       );
     }
 
     if (!await downloadsDir.exists()) {
       throw Exception(
-        '${DownloadsRepositoryConstants.downloadsFolderNotFound} ${downloadsDir.path}',
+        '${RecordingsRepositoryConstants.downloadsFolderNotFound} ${downloadsDir.path}',
       );
     }
 

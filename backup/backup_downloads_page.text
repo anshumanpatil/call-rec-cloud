@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'downloads_constants.dart';
-import 'downloads_repository.dart';
+import 'package:cll_upld/constants.dart';
+import 'package:cll_upld/repositories/recordings_repository.dart';
+import 'package:cll_upld/widgets/downloads_drawer.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -85,6 +86,16 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+      ),
+      drawer: DownloadsDrawer(
+        applicationName: widget.title,
+        onRefresh: _ensurePermissionAndLoadDownloads,
+        onAbout: () {
+          Navigator.pushNamed(context, AppRoutes.about);
+        },
+        onSettings: () {
+          Navigator.pushNamed(context, AppRoutes.settings);
+        },
       ),
       body: errorMessage != null
           ? Center(child: Text(errorMessage!))
