@@ -38,7 +38,7 @@ class AppStrings {
   static const String permissionGrantedMessage =
       'Permission granted, loading recordings...';
   static const String refreshTooltip = 'Refresh';
-  static const String uploadsButton = 'Uploads';
+  static const String uploadsButton = 'Upload all calls to vault';
 
   // Recordings List
   static const String selectAllLabel = 'Select All';

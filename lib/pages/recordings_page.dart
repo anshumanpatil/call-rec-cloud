@@ -102,11 +102,14 @@ class _RecordingsPageState extends State<RecordingsPage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // TODO: Implement uploads functionality
-              },
-              child: const Text(AppStrings.uploadsButton),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  // TODO: Implement uploads functionality
+                },
+                child: const Text(AppStrings.uploadsButton),
+              ),
             ),
           ),
           Expanded(
