@@ -28,7 +28,7 @@ class _RecordingsPageState extends State<RecordingsPage> {
   @override
   void initState() {
     super.initState();
-    print('Initializing app and checking permissions...');
+    print(AppStrings.initializingMessage);
     _ensurePermissionAndLoadDownloads();
   }
 
@@ -45,7 +45,7 @@ class _RecordingsPageState extends State<RecordingsPage> {
       }
     }
 
-    print('Permission granted, loading recordings...');
+    print(AppStrings.permissionGrantedMessage);
     await _fetchAndSetDownloads();
   }
 
@@ -115,7 +115,7 @@ class _RecordingsPageState extends State<RecordingsPage> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: _ensurePermissionAndLoadDownloads,
-        tooltip: 'Refresh',
+        tooltip: AppStrings.refreshTooltip,
         child: const Icon(Icons.refresh),
       ),
     );

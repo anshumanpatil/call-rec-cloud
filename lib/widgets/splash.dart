@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:cll_upld/theme/theme.dart';
+
 import 'package:cll_upld/constants.dart';
+import 'package:cll_upld/theme/theme.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -28,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
         width: double.maxFinite,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/bg1.png"),
+            image: AssetImage(AppStrings.splashBackgroundImage),
             fit: BoxFit.cover,
           ),
         ),
@@ -41,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               Center(
                 child: Image.asset(
-                  "assets/images/logo.png",
+                  AppStrings.appLogoImage,
                   height: size.height * 0.18,
                   fit: BoxFit.cover,
                 ),

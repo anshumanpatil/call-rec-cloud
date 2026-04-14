@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cll_upld/constants.dart';
 
 class DownloadsDrawer extends StatelessWidget {
   const DownloadsDrawer({
@@ -25,13 +26,13 @@ class DownloadsDrawer extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
             child: const Text(
-              'Downloads Menu',
+              AppStrings.downloadsMenuTitle,
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
           ),
           ListTile(
             leading: const Icon(Icons.refresh),
-            title: const Text('Refresh Downloads'),
+            title: const Text(AppStrings.refreshDownloadsMenu),
             onTap: () {
               Navigator.pop(context);
               onRefresh();
@@ -39,7 +40,7 @@ class DownloadsDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('About'),
+            title: const Text(AppStrings.aboutMenu),
             onTap: () {
               Navigator.pop(context);
               onAbout();
@@ -47,7 +48,7 @@ class DownloadsDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
+            title: const Text(AppStrings.settingsMenu),
             onTap: () {
               Navigator.pop(context);
               onSettings();

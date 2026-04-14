@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:cll_upld/constants.dart';
 
 class RecordingsListView extends StatelessWidget {
   const RecordingsListView({
@@ -25,7 +26,7 @@ class RecordingsListView extends StatelessWidget {
       itemBuilder: (context, index) {
         if (index == 0) {
           return CheckboxListTile(
-            title: const Text('Select All'),
+            title: const Text(AppStrings.selectAllLabel),
             value: allSelected,
             onChanged: (bool? value) {
               onToggleSelectAll();

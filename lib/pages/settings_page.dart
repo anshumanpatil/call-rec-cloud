@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cll_upld/constants.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -6,26 +7,26 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: const Text(AppStrings.settingsTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Settings',
+              AppStrings.settingsHeading,
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             const Text(
-              'Manage app preferences and permissions here.',
+              AppStrings.settingsDescription,
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 24),
             TextButton.icon(
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.arrow_back),
-              label: const Text('Return to main'),
+              label: const Text(AppStrings.returnToMainButton),
             ),
           ],
         ),
