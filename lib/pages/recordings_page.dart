@@ -98,21 +98,36 @@ class _RecordingsPageState extends State<RecordingsPage> {
           Navigator.pushNamed(context, AppRoutes.settings);
         },
       ),
-      body: errorMessage != null
-          ? Center(child: Text(errorMessage!))
-          : recordings.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : RecordingsListView(
-              recordings: recordings,
-              selectedItems: selectedItems,
-              allSelected: allSelected,
-              onToggleSelectAll: _toggleSelectAll,
-              onSelectedChanged: (fileIndex) {
-                setState(() {
-                  selectedItems[fileIndex] = !selectedItems[fileIndex];
-                });
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () {
+                // TODO: Implement uploads functionality
               },
+              child: const Text(AppStrings.uploadsButton),
             ),
+          ),
+          Expanded(
+            child: errorMessage != null
+                ? Center(child: Text(errorMessage!))
+                : recordings.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : RecordingsListView(
+                    recordings: recordings,
+                    selectedItems: selectedItems,
+                    allSelected: allSelected,
+                    onToggleSelectAll: _toggleSelectAll,
+                    onSelectedChanged: (fileIndex) {
+                      setState(() {
+                        selectedItems[fileIndex] = !selectedItems[fileIndex];
+                      });
+                    },
+                  ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _ensurePermissionAndLoadDownloads,
         tooltip: AppStrings.refreshTooltip,

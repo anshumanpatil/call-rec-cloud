@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:cll_upld/constants.dart';
 import 'package:cll_upld/pages/recordings_page.dart';
 
 void main() {
@@ -76,6 +77,16 @@ void main() {
 
       // Verify FAB tooltip
       expect(find.byTooltip('Refresh'), findsOneWidget);
+    });
+
+    testWidgets('Uploads button is displayed', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(home: RecordingsPage(title: 'Recordings')),
+      );
+
+      // Verify uploads button exists
+      expect(find.byType(ElevatedButton), findsOneWidget);
+      expect(find.text(AppStrings.uploadsButton), findsOneWidget);
     });
 
     testWidgets('RecordingsPage accepts title parameter', (
