@@ -1,0 +1,132 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+
+import 'downloads_constants.dart';
+import 'downloads_repository.dart';
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final DownloadsRepository _repository = DownloadsRepository();
+  List<FileSystemEntity> downloads = [];
+  List<bool> selectedItems = [];
+  String? errorMessage;
+
+  bool get allSelected =>
+      selectedItems.isNotEmpty && selectedItems.every((element) => element);
+
+  @override
+  void initState() {
+    super.initState();
+    print('Initializing app and checking permissions...');
+    _ensurePermissionAndLoadDownloads();
+  }
+
+  Future<void> _ensurePermissionAndLoadDownloads() async {
+    if (Platform.isAndroid &&
+        !await _repository.hasManageExternalStoragePermission()) {
+      final granted = await _repository
+          .requestManageExternalStoragePermission();
+      if (!granted) {
+        _setPermissionError(
+          DownloadsRepositoryConstants.manageExternalStoragePermissionError,
+        );
+        return;
+      }
+    }
+
+    print('Permission granted, loading downloads...');
+    await _fetchAndSetDownloads();
+  }
+
+  void _setPermissionError(String message) {
+    setState(() {
+      downloads = [];
+      selectedItems = [];
+      errorMessage = message;
+    });
+  }
+
+  Future<void> _fetchAndSetDownloads() async {
+    try {
+      final entities = await _repository.fetchDownloads();
+      setState(() {
+        downloads = entities;
+        selectedItems = List.generate(entities.length, (_) => false);
+        errorMessage = null;
+      });
+    } catch (error) {
+      setState(() {
+        downloads = [];
+        selectedItems = [];
+        errorMessage = error.toString();
+      });
+    }
+  }
+
+  void _toggleSelectAll() {
+    setState(() {
+      final selectAll = !allSelected;
+      selectedItems = List.generate(downloads.length, (_) => selectAll);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+      ),
+      body: errorMessage != null
+          ? Center(child: Text(errorMessage!))
+          : downloads.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: downloads.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return CheckboxListTile(
+                    title: const Text('Select All'),
+                    value: allSelected,
+                    onChanged: (bool? value) {
+                      _toggleSelectAll();
+                    },
+                  );
+                }
+
+                final fileIndex = index - 1;
+                final file = downloads[fileIndex];
+                final fileName = file.path.split(Platform.pathSeparator).last;
+                final icon = file is Directory
+                    ? Icons.folder
+                    : Icons.insert_drive_file;
+
+                return CheckboxListTile(
+                  title: Text(fileName),
+                  secondary: Icon(icon),
+                  value: selectedItems[fileIndex],
+                  onChanged: (bool? value) {
+                    setState(() {
+                      selectedItems[fileIndex] = value ?? false;
+                    });
+                  },
+                );
+              },
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _ensurePermissionAndLoadDownloads,
+        tooltip: 'Refresh',
+        child: const Icon(Icons.refresh),
+      ),
+    );
+  }
+}
