@@ -86,7 +86,7 @@ void main() {
 
       // Verify uploads button exists
       expect(find.byType(ElevatedButton), findsOneWidget);
-      expect(find.text(AppStrings.uploadsButton), findsOneWidget);
+      expect(find.text(AppStrings.uploadButton), findsOneWidget);
     });
 
     testWidgets('RecordingsPage accepts title parameter', (
