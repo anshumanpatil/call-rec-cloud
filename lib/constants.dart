@@ -25,6 +25,9 @@ class AppStrings {
   static const String settingsHeading = 'Settings';
   static const String settingsDescription =
       'Manage app preferences and permissions here.';
+  static const String openFolderLabel = 'Open folder which contains recordings';
+  static const String openButton = 'Open';
+  static const String recordingsPathLabel = 'Recordings path';
 
   // Drawer Menu
   static const String downloadsMenuTitle = 'Downloads Menu';

@@ -2,8 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:cll_upld/constants.dart';
 import 'package:cll_upld/theme/theme.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  late TextEditingController _recordingsPathController;
+
+  @override
+  void initState() {
+    super.initState();
+    _recordingsPathController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _recordingsPathController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +44,41 @@ class SettingsPage extends StatelessWidget {
             const Text(
               AppStrings.settingsDescription,
               style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 32),
+            // Open folder section
+            const Text(
+              AppStrings.openFolderLabel,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () {
+                // TODO: Implement folder selection logic
+                print('Open folder button pressed');
+              },
+              child: const Text(AppStrings.openButton),
+            ),
+            const SizedBox(height: 32),
+            // Recordings path section
+            const Text(
+              AppStrings.recordingsPathLabel,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _recordingsPathController,
+              decoration: InputDecoration(
+                hintText: 'Enter recordings directory path',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
+              ),
+              readOnly: true,
             ),
             const SizedBox(height: 24),
             TextButton.icon(
