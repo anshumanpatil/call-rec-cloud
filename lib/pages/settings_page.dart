@@ -36,16 +36,6 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              AppStrings.settingsHeading,
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              AppStrings.settingsDescription,
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 32),
             // Open folder section
             const Text(
               AppStrings.openFolderLabel,
@@ -53,6 +43,10 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             const SizedBox(height: 12),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                minimumSize: const Size.fromHeight(48),
+              ),
               onPressed: () {
                 // TODO: Implement folder selection logic
                 print('Open folder button pressed');
