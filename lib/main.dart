@@ -5,8 +5,15 @@ import 'package:cll_upld/constants.dart';
 import 'package:cll_upld/pages/about_us_page.dart';
 import 'package:cll_upld/pages/recordings_page.dart';
 import 'package:cll_upld/pages/settings_page.dart';
+import 'package:cll_upld/services/local_notification_service.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final localNotificationService = LocalNotificationService();
+  await localNotificationService.initialize();
+  await localNotificationService.startUploadReminderEveryMinute();
+
   runApp(const MyApp());
 }
 
