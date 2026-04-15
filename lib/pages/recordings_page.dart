@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:docman/docman.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cll_upld/constants.dart';
@@ -19,7 +21,7 @@ class RecordingsPage extends StatefulWidget {
 
 class _RecordingsPageState extends State<RecordingsPage> {
   final DownloadsRepository _repository = DownloadsRepository();
-  List<FileSystemEntity> recordings = [];
+  List<DocumentFile> recordings = [];
   List<bool> selectedItems = [];
   String? errorMessage;
 
@@ -58,6 +60,27 @@ class _RecordingsPageState extends State<RecordingsPage> {
     });
   }
 
+  void _showNoPathSettingsDialog() {
+    if (!mounted) {
+      return;
+    }
+
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.warning,
+      animType: AnimType.scale,
+      title: 'Path Settings Missing',
+      desc:
+          'No path settings found. Please open Settings and choose the recordings folder.',
+      btnCancelText: 'Later',
+      btnCancelOnPress: () {},
+      btnOkText: 'Open Settings',
+      btnOkOnPress: () {
+        Navigator.pushNamed(context, AppRoutes.settings);
+      },
+    ).show();
+  }
+
   Future<void> _fetchAndSetDownloads() async {
     try {
       final entities = await _repository.fetchDownloads();
@@ -67,11 +90,17 @@ class _RecordingsPageState extends State<RecordingsPage> {
         errorMessage = null;
       });
     } catch (error) {
+      final message = error.toString().replaceFirst('Exception: ', '');
+
       setState(() {
         recordings = [];
         selectedItems = [];
-        errorMessage = error.toString();
+        errorMessage = message;
       });
+
+      if (message == RecordingsRepositoryConstants.noPathSettingsFound) {
+        _showNoPathSettingsDialog();
+      }
     }
   }
 

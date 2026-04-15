@@ -2,6 +2,8 @@ class RecordingsRepositoryConstants {
   static const String downloadsDirectoryType = "RECORDINGS/CALL";
   static const String unableToDetermineDownloadsFolder =
       'Unable to determine downloads folder.';
+  static const String noPathSettingsFound =
+      'No path settings found. Please set recordings path in Settings.';
   static const String downloadsFolderNotFound = 'Downloads folder not found:';
   static const String manageExternalStoragePermissionError =
       'Manage external storage permission is required to access Downloads.';

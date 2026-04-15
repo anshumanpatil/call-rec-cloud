@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:docman/docman.dart';
 import 'package:flutter/material.dart';
 import 'package:cll_upld/constants.dart';
 
@@ -13,7 +12,7 @@ class RecordingsListView extends StatelessWidget {
     required this.onSelectedChanged,
   });
 
-  final List<FileSystemEntity> recordings;
+  final List<DocumentFile> recordings;
   final List<bool> selectedItems;
   final bool allSelected;
   final VoidCallback onToggleSelectAll;
@@ -36,8 +35,8 @@ class RecordingsListView extends StatelessWidget {
 
         final fileIndex = index - 1;
         final file = recordings[fileIndex];
-        final fileName = file.path.split(Platform.pathSeparator).last;
-        final icon = file is Directory ? Icons.folder : Icons.insert_drive_file;
+        final fileName = file.name;
+        final icon = file.isDirectory ? Icons.folder : Icons.insert_drive_file;
 
         return CheckboxListTile(
           title: Text(fileName),
