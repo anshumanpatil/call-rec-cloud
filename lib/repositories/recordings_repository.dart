@@ -2,8 +2,8 @@ import 'package:docman/docman.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
-import '../constants.dart';
-import '../services/database_provider.dart';
+import 'package:cll_upld/constants.dart';
+import 'package:cll_upld/services/database_provider.dart';
 
 class DownloadsRepository {
   final DatabaseProvider _databaseProvider = DatabaseProvider();

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:docman/docman.dart';
 import 'package:cll_upld/constants.dart';
-import 'package:cll_upld/services/database_provider.dart';
+import 'package:cll_upld/repositories/settings_repository.dart';
 import 'package:cll_upld/theme/theme.dart';
+import 'package:cll_upld/widgets/recording_path_selector.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -16,7 +16,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   late TextEditingController _recordingsPathController;
-  final DatabaseProvider _databaseProvider = DatabaseProvider();
+  final SettingsRepository _settingsRepository = SettingsRepository();
   String? _initialDirectory;
 
   bool get _supportsDirectoryPicker {
@@ -25,6 +25,14 @@ class _SettingsPageState extends State<SettingsPage> {
     }
 
     return defaultTargetPlatform == TargetPlatform.android;
+  }
+
+  String? get _initialTreeUri {
+    if (_initialDirectory != null &&
+        _initialDirectory!.startsWith('content://')) {
+      return _initialDirectory;
+    }
+    return null;
   }
 
   // Future<void> _loadInitialDirectory() async {
@@ -88,6 +96,23 @@ class _SettingsPageState extends State<SettingsPage> {
     ).show();
   }
 
+  Future<DocumentFile?> _pickDirectory() async {
+    return await _settingsRepository.pickDirectory(
+      initialTreeUri: _initialTreeUri,
+    );
+  }
+
+  void _applySelectedPath(String selectedPath) {
+    setState(() {
+      _recordingsPathController.text = selectedPath;
+      _initialDirectory = selectedPath;
+    });
+  }
+
+  Future<void> _saveSelectedPath(String selectedPath) async {
+    await _settingsRepository.saveSelectedPath(selectedPath);
+  }
+
   Future<void> _openFolderSelector() async {
     if (!_supportsDirectoryPicker) {
       _showStatusDialog(
@@ -98,15 +123,9 @@ class _SettingsPageState extends State<SettingsPage> {
       return;
     }
 
-    DocumentFile? selectedDirectory;
+    final DocumentFile? selectedDirectory;
     try {
-      final initialTreeUri =
-          (_initialDirectory != null &&
-              _initialDirectory!.startsWith('content://'))
-          ? _initialDirectory
-          : null;
-
-      selectedDirectory = await DocMan.pick.directory(initDir: initialTreeUri);
+      selectedDirectory = await _pickDirectory();
     } catch (_) {
       _showStatusDialog(
         title: 'Folder Picker Error',
@@ -120,28 +139,11 @@ class _SettingsPageState extends State<SettingsPage> {
       return;
     }
 
-    final selectedPath = selectedDirectory.uri.toString();
-
-    setState(() {
-      _recordingsPathController.text = selectedPath;
-      _initialDirectory = selectedPath;
-    });
+    final selectedPath = selectedDirectory.uri;
+    _applySelectedPath(selectedPath);
 
     try {
-      final allSettings = await _databaseProvider.getAllSettings();
-      if (allSettings.isEmpty) {
-        await _databaseProvider.createSettings(
-          isPathAvailable: true,
-          recordingsPath: selectedPath,
-        );
-      } else {
-        final settingId = allSettings.first['id'] as int;
-        await _databaseProvider.updateSettings(
-          settingId: settingId,
-          isPathAvailable: true,
-          recordingsPath: selectedPath,
-        );
-      }
+      await _saveSelectedPath(selectedPath);
     } catch (e) {
       _showStatusDialog(
         title: 'Save Failed',
@@ -180,52 +182,10 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Open folder section
-            const Text(
-              AppStrings.openFolderLabel,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: lightGreenColor,
-                minimumSize: const Size.fromHeight(48),
-              ),
-              onPressed: _openFolderSelector,
-              child: const Text(AppStrings.openButton),
-            ),
-            const SizedBox(height: 32),
-            // Recordings path section
-            const Text(
-              AppStrings.recordingsPathLabel,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _recordingsPathController,
-              decoration: InputDecoration(
-                hintText: 'Enter recordings directory path',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 12,
-                ),
-              ),
-              // readOnly: true,
-            ),
-            const SizedBox(height: 24),
-            Divider(height: 100, color: Colors.green, thickness: 1),
-            TextButton.icon(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-              label: const Text(AppStrings.returnToMainButton),
-            ),
-          ],
+        child: RecordingPathSelector(
+          recordingsPathController: _recordingsPathController,
+          onOpenFolder: _openFolderSelector,
+          onReturnToMain: () => Navigator.pop(context),
         ),
       ),
     );

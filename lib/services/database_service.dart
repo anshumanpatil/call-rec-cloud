@@ -30,20 +30,14 @@ class DatabaseService {
 
   Future<void> _createTables(Database db, int version) async {
     // Settings Table
-    await db.execute(
-      '''CREATE TABLE IF NOT EXISTS settings(
+    await db.execute('''CREATE TABLE IF NOT EXISTS settings(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         isPathAvailable INTEGER DEFAULT 0,
         recordings_path TEXT
-      )''',
-    );
+      )''');
   }
 
-  Future<void> _onUpgrade(
-    Database db,
-    int oldVersion,
-    int newVersion,
-  ) async {
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     // Handle database migrations here
   }
 
@@ -65,12 +59,7 @@ class DatabaseService {
     required List<dynamic> whereArgs,
   }) async {
     final db = await database;
-    return await db.update(
-      table,
-      data,
-      where: where,
-      whereArgs: whereArgs,
-    );
+    return await db.update(table, data, where: where, whereArgs: whereArgs);
   }
 
   // Generic Delete
@@ -80,11 +69,7 @@ class DatabaseService {
     required List<dynamic> whereArgs,
   }) async {
     final db = await database;
-    return await db.delete(
-      table,
-      where: where,
-      whereArgs: whereArgs,
-    );
+    return await db.delete(table, where: where, whereArgs: whereArgs);
   }
 
   // Generic Query

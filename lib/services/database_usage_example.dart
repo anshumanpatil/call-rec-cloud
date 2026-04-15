@@ -44,4 +44,3 @@ void databaseServiceUsageExample() async {
   await dbProvider.closeDatabase();
   print('Database closed');
 }
-
