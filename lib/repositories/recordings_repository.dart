@@ -1,11 +1,9 @@
-import 'dart:io';
+import 'package:docman/docman.dart';
 
-import 'package:external_path/external_path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../constants.dart';
-import '../services/database_provider.dart';
+import 'package:cll_upld/constants.dart';
+import 'package:cll_upld/services/database_provider.dart';
 
 class DownloadsRepository {
   final DatabaseProvider _databaseProvider = DatabaseProvider();
@@ -20,74 +18,45 @@ class DownloadsRepository {
     return result.isGranted;
   }
 
-  Future<Directory?> getPlatformDownloadsDirectory() async {
-    try {
-      // Check if a recordings path is saved in the database
-      final allSettings = await _databaseProvider.getAllSettings();
-      if (allSettings.isNotEmpty) {
-        final settings = allSettings.first;
-        final isPathAvailable = settings['isPathAvailable'] == 1;
-        final recordingsPath = settings['recordings_path'];
-
-        if (isPathAvailable && recordingsPath != null && recordingsPath.isNotEmpty) {
-          final dir = Directory(recordingsPath);
-          if (await dir.exists()) {
-            print('✓ Path retrieved from database: $recordingsPath');
-            return dir;
-          }
-        }
-      }
-    } catch (e) {
-      // If database lookup fails, fall back to default behavior
-      print('Error fetching path from database: $e');
-    }
-
-    // Fall back to default behavior if no valid path in database
-    String downloadsPath;
-    if (Platform.isAndroid || Platform.isIOS) {
-      downloadsPath =
-          await ExternalPath.getExternalStoragePublicDirectory(
-            RecordingsRepositoryConstants.downloadsDirectoryType,
-          );
-      print('✓ Path retrieved from ExternalPath: $downloadsPath');
-    } else {
-      final dir = await getDownloadsDirectory();
-      if (dir == null) return null;
-      downloadsPath = dir.path;
-      print('✓ Path retrieved from getDownloadsDirectory: $downloadsPath');
-    }
-
-    // Save the path to database for future use
+  Future<DocumentFile?> getPlatformDownloadsDirectory() async {
     try {
       final allSettings = await _databaseProvider.getAllSettings();
       if (allSettings.isEmpty) {
-        // Create new settings record
-        await _databaseProvider.createSettings(
-          isPathAvailable: true,
-          recordingsPath: downloadsPath,
-        );
-        print('✓ New settings created and path saved to database: $downloadsPath');
-      } else {
-        // Update existing settings record
-        final settingId = allSettings.first['id'];
-        await _databaseProvider.updateSettings(
-          settingId: settingId,
-          isPathAvailable: true,
-          recordingsPath: downloadsPath,
-        );
-        print('✓ Existing settings updated with path: $downloadsPath');
+        throw Exception(RecordingsRepositoryConstants.noPathSettingsFound);
       }
+
+      final settings = allSettings.first;
+      final isPathAvailable = settings['isPathAvailable'] == 1;
+      final recordingsPath = settings['recordings_path'];
+
+      if (!isPathAvailable ||
+          recordingsPath == null ||
+          recordingsPath.isEmpty) {
+        throw Exception(RecordingsRepositoryConstants.noPathSettingsFound);
+      }
+      print('✓ Recordings path from database: $recordingsPath');
+      final directory = await DocumentFile(uri: recordingsPath).get();
+      if (directory != null && directory.exists && directory.isDirectory) {
+        return directory;
+      }
+
+      throw Exception(
+        '${RecordingsRepositoryConstants.downloadsFolderNotFound} $recordingsPath',
+      );
     } catch (e) {
-      print('Error saving path to database: $e');
+      if (e.toString().contains(
+        RecordingsRepositoryConstants.noPathSettingsFound,
+      )) {
+        rethrow;
+      }
+
+      throw Exception(
+        RecordingsRepositoryConstants.unableToDetermineDownloadsFolder,
+      );
     }
-
-    // await deleteAllSettings(); // Uncomment for testing
-
-    print('✓ Final directory path being returned: $downloadsPath');
-    return Directory(downloadsPath);
   }
 
-  Future<List<FileSystemEntity>> listDownloads() async {
+  Future<List<DocumentFile>> listDownloads() async {
     final downloadsDir = await getPlatformDownloadsDirectory();
 
     if (downloadsDir == null) {
@@ -96,16 +65,16 @@ class DownloadsRepository {
       );
     }
 
-    if (!await downloadsDir.exists()) {
+    if (!downloadsDir.exists || !downloadsDir.isDirectory) {
       throw Exception(
-        '${RecordingsRepositoryConstants.downloadsFolderNotFound} ${downloadsDir.path}',
+        '${RecordingsRepositoryConstants.downloadsFolderNotFound} ${downloadsDir.uri}',
       );
     }
 
-    return downloadsDir.listSync();
+    return downloadsDir.listDocuments();
   }
 
-  Future<List<FileSystemEntity>> fetchDownloads() async {
+  Future<List<DocumentFile>> fetchDownloads() async {
     return await listDownloads();
   }
 

@@ -2,6 +2,8 @@ class RecordingsRepositoryConstants {
   static const String downloadsDirectoryType = "RECORDINGS/CALL";
   static const String unableToDetermineDownloadsFolder =
       'Unable to determine downloads folder.';
+  static const String noPathSettingsFound =
+      'No path settings found. Please set recordings path in Settings.';
   static const String downloadsFolderNotFound = 'Downloads folder not found:';
   static const String manageExternalStoragePermissionError =
       'Manage external storage permission is required to access Downloads.';
@@ -25,6 +27,9 @@ class AppStrings {
   static const String settingsHeading = 'Settings';
   static const String settingsDescription =
       'Manage app preferences and permissions here.';
+  static const String openFolderLabel = 'Open folder which contains recordings';
+  static const String openButton = 'Open';
+  static const String recordingsPathLabel = 'Recordings path';
 
   // Drawer Menu
   static const String downloadsMenuTitle = 'Downloads Menu';
