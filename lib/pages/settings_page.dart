@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cll_upld/constants.dart';
+import 'package:cll_upld/theme/theme.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -7,7 +8,10 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.settingsTitle)),
+      appBar: AppBar(
+        backgroundColor: lightPurpleColor,
+        title: const Text(AppStrings.settingsTitle),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

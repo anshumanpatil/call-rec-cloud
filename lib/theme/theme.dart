@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const Color primaryColor = Color(0xFFFA9C7A);
+const Color lightPurpleColor = Color(0xFFD8BFD8); // Light purple for AppBar
 const Color screenBgColor = Color(0xFFFAFAFA);
 const Color whiteColor = Colors.white;
 const Color blackColor = Colors.black;

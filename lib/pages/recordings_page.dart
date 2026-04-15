@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cll_upld/constants.dart';
 import 'package:cll_upld/repositories/recordings_repository.dart';
+import 'package:cll_upld/theme/theme.dart';
 import 'package:cll_upld/widgets/downloads_drawer.dart';
 import 'package:cll_upld/widgets/recordings_list.dart';
 
@@ -85,7 +86,7 @@ class _RecordingsPageState extends State<RecordingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: lightPurpleColor,
         title: Text(widget.title),
       ),
       drawer: DownloadsDrawer(
