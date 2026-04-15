@@ -4,6 +4,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:docman/docman.dart';
 import 'package:cll_upld/constants.dart';
 import 'package:cll_upld/repositories/settings_repository.dart';
+import 'package:cll_upld/services/local_notification_service.dart';
 import 'package:cll_upld/theme/theme.dart';
 import 'package:cll_upld/widgets/recording_path_selector.dart';
 
@@ -17,6 +18,8 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   late TextEditingController _recordingsPathController;
   final SettingsRepository _settingsRepository = SettingsRepository();
+  final LocalNotificationService _localNotificationService =
+      LocalNotificationService();
   String? _initialDirectory;
 
   bool get _supportsDirectoryPicker {
@@ -160,6 +163,24 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  Future<void> _sendTestNotification() async {
+    try {
+      final log = await _localNotificationService
+          .sendImmediateTestNotification();
+      _showStatusDialog(
+        title: 'Notification Test',
+        message: log,
+        dialogType: DialogType.info,
+      );
+    } catch (e) {
+      _showStatusDialog(
+        title: 'Notification Test Failed',
+        message: '$e',
+        dialogType: DialogType.error,
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -185,6 +206,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: RecordingPathSelector(
           recordingsPathController: _recordingsPathController,
           onOpenFolder: _openFolderSelector,
+          onTestNotification: _sendTestNotification,
           onReturnToMain: () => Navigator.pop(context),
         ),
       ),
