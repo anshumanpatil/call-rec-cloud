@@ -34,7 +34,7 @@ class RecordingPathSelector extends StatelessWidget {
           onPressed: onOpenFolder,
           child: const Text(AppStrings.openButton),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 24),
         // Recordings path section
         const Text(
           AppStrings.recordingsPathLabel,
