@@ -8,13 +8,11 @@ class RecordingPathSelector extends StatelessWidget {
     super.key,
     required this.recordingsPathController,
     required this.onOpenFolder,
-    required this.onTestNotification,
     required this.onReturnToMain,
   });
 
   final TextEditingController recordingsPathController;
   final VoidCallback onOpenFolder;
-  final VoidCallback onTestNotification;
   final VoidCallback onReturnToMain;
 
   @override
@@ -36,12 +34,7 @@ class RecordingPathSelector extends StatelessWidget {
           onPressed: onOpenFolder,
           child: const Text(AppStrings.openButton),
         ),
-        const SizedBox(height: 12),
-        OutlinedButton(
-          onPressed: onTestNotification,
-          child: const Text('Test Notification'),
-        ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 24),
         // Recordings path section
         const Text(
           AppStrings.recordingsPathLabel,

@@ -1,6 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import 'database_constants.dart';
+
 class DatabaseService {
   static final DatabaseService _instance = DatabaseService._internal();
   static Database? _database;
@@ -18,11 +20,11 @@ class DatabaseService {
 
   Future<Database> _initializeDatabase() async {
     final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, 'cll_upld.db');
+    final path = join(databasesPath, DatabaseConstants.databaseName);
 
     return await openDatabase(
       path,
-      version: 1,
+      version: DatabaseConstants.databaseVersion,
       onCreate: _createTables,
       onUpgrade: _onUpgrade,
     );
@@ -30,15 +32,43 @@ class DatabaseService {
 
   Future<void> _createTables(Database db, int version) async {
     // Settings Table
-    await db.execute('''CREATE TABLE IF NOT EXISTS settings(
+    await db.execute(
+      '''CREATE TABLE IF NOT EXISTS ${DatabaseConstants.settingsTable}(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         isPathAvailable INTEGER DEFAULT 0,
         recordings_path TEXT
-      )''');
+      )''',
+    );
+
+    // Notification Details Table
+    await db.execute(
+      '''CREATE TABLE IF NOT EXISTS ${DatabaseConstants.notificationDetailsTable}(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        body TEXT NOT NULL,
+        repeat_interval TEXT NOT NULL DEFAULT '${DatabaseConstants.repeatIntervalDaily}'
+      )''',
+    );
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // Handle database migrations here
+    if (oldVersion < 2) {
+      await db.execute(
+        '''CREATE TABLE IF NOT EXISTS ${DatabaseConstants.notificationDetailsTable}(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          body TEXT NOT NULL
+        )''',
+      );
+    }
+
+    if (oldVersion < 3) {
+      await db.execute(
+        "ALTER TABLE ${DatabaseConstants.notificationDetailsTable} "
+        "ADD COLUMN ${DatabaseConstants.notificationRepeatInterval} TEXT NOT NULL "
+        "DEFAULT '${DatabaseConstants.repeatIntervalDaily}'",
+      );
+    }
   }
 
   // Generic Insert
@@ -131,6 +161,7 @@ class DatabaseService {
   // Clear all tables
   Future<void> clearAllTables() async {
     final db = await database;
-    await db.delete('settings');
+    await db.delete(DatabaseConstants.settingsTable);
+    await db.delete(DatabaseConstants.notificationDetailsTable);
   }
 }
