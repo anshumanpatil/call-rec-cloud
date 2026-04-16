@@ -87,8 +87,34 @@ class LocalNotificationService {
     return false;
   }
 
-  Future<void> startUploadReminderEveryMinute() async {
+  Future<String> startUploadReminderEveryMinute() async {
+    final log = StringBuffer('Periodic reminder diagnostic log:\n');
+
+    if (!_isInitialized) {
+      log.writeln('- Plugin not initialized. Initializing now...');
+      final granted = await initialize();
+      log.writeln('- Permission granted during init: $granted');
+      if (!granted) {
+        debugPrint(log.toString());
+        return log.toString();
+      }
+    }
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final enabled = await _plugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >()
+          ?.areNotificationsEnabled();
+      log.writeln('- Android notifications enabled: ${enabled ?? false}');
+      if (enabled == false) {
+        debugPrint(log.toString());
+        return log.toString();
+      }
+    }
+
     await _plugin.cancel(id: _uploadReminderId);
+    log.writeln('- Cleared existing periodic reminder notification id.');
 
     await _plugin.periodicallyShow(
       id: _uploadReminderId,
@@ -98,6 +124,13 @@ class LocalNotificationService {
       notificationDetails: _notificationDetails,
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
+
+    final pendingCount = (await _plugin.pendingNotificationRequests()).length;
+    log.writeln('- Periodic reminder scheduled successfully.');
+    log.writeln('- Pending scheduled notifications: $pendingCount');
+
+    debugPrint(log.toString());
+    return log.toString();
   }
 
   Future<String> sendImmediateTestNotification() async {
