@@ -1,9 +1,5 @@
 import 'package:cll_upld/services/database_provider.dart';
-
-/// Example usage of DatabaseService and DatabaseProvider
-///
-/// This file demonstrates how to use the database service to perform
-/// CRUD operations for settings (isPathAvailable, recordings_path)
+import 'dart:developer';
 
 void databaseServiceUsageExample() async {
   // Initialize the database provider
@@ -16,15 +12,15 @@ void databaseServiceUsageExample() async {
     isPathAvailable: false,
     recordingsPath: '/storage/emulated/0/Documents/Recordings',
   );
-  print('Created settings with ID: $settingId');
+  log('Created settings with ID: $settingId');
 
   // Get settings by ID
   final settings = await dbProvider.getSettingsById(settingId);
-  print('Settings data: $settings');
+  log('Settings data: $settings');
 
   // Get all settings records
   final allSettings = await dbProvider.getAllSettings();
-  print('All settings: $allSettings');
+  log('All settings: $allSettings');
 
   // Update settings
   await dbProvider.updateSettings(
@@ -32,15 +28,15 @@ void databaseServiceUsageExample() async {
     isPathAvailable: true,
     recordingsPath: '/storage/emulated/0/Downloads/Recordings',
   );
-  print('Updated settings');
+  log('Updated settings');
 
   // Delete settings
   await dbProvider.deleteSettings(settingId);
-  print('Deleted settings');
+  log('Deleted settings');
 
   // ===================== CLEANUP =====================
 
   // Close database
   await dbProvider.closeDatabase();
-  print('Database closed');
+  log('Database closed');
 }

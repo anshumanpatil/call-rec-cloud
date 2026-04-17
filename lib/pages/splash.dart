@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'package:cll_upld/constants.dart';
+import 'package:cll_upld/repositories/recordings_repository.dart';
 import 'package:cll_upld/theme/theme.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -13,12 +15,51 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final DownloadsRepository _repository = DownloadsRepository();
+
   @override
   void initState() {
-    Timer(Duration(seconds: 3), () {
-      Navigator.pushNamed(context, AppRoutes.home);
-    });
     super.initState();
+    _bootstrap();
+  }
+
+  Future<void> _ensurePermissionAndLoadDownloads() async {
+    if (Platform.isAndroid &&
+        !await _repository.hasManageExternalStoragePermission()) {
+      final granted = await _repository
+          .requestManageExternalStoragePermission();
+      if (!granted) {
+        throw Exception(
+          RecordingsRepositoryConstants.manageExternalStoragePermissionError,
+        );
+      }
+    }
+
+    await _repository.fetchDownloads();
+  }
+
+  Future<void> _bootstrap() async {
+    await Future<void>.delayed(const Duration(seconds: 3));
+
+    try {
+      await _ensurePermissionAndLoadDownloads();
+      if (!mounted) {
+        return;
+      }
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      final message = error.toString().replaceFirst('Exception: ', '');
+      if (message == RecordingsRepositoryConstants.noPathSettingsFound) {
+        Navigator.pushReplacementNamed(context, AppRoutes.settings);
+        return;
+      }
+
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
+    }
   }
 
   @override

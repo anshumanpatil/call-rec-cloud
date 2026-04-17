@@ -68,7 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
   //           isPathAvailable: true,
   //           recordingsPath: _initialDirectory,
   //         );
-  //         print(
+  //         log(
   //           '✓ New settings created and path saved to database: $_initialDirectory',
   //         );
   //       } else {
@@ -79,10 +79,10 @@ class _SettingsPageState extends State<SettingsPage> {
   //           isPathAvailable: true,
   //           recordingsPath: _initialDirectory,
   //         );
-  //         print('✓ Existing settings updated with path: $_initialDirectory');
+  //         log('✓ Existing settings updated with path: $_initialDirectory');
   //       }
   //     } catch (e) {
-  //       print('Error saving path to database: $e');
+  //       log('Error saving path to database: $e');
   //     }
   //   } catch (_) {
   //     // Keep picker functional even if the default path lookup fails.
@@ -330,7 +330,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
                 onSaveNotificationDetails: _saveNotificationDetails,
               ),
-              const SizedBox(height: 32),
+              const Divider(height: 100, color: Colors.green, thickness: 1),
               RecordingPathSelector(
                 recordingsPathController: _recordingsPathController,
                 onOpenFolder: _openFolderSelector,

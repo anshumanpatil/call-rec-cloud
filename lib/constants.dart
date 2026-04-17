@@ -38,8 +38,6 @@ class AppStrings {
   static const String settingsMenu = 'Settings';
 
   // Recordings Page
-  static const String initializingMessage =
-      'Initializing app and checking permissions...';
   static const String permissionGrantedMessage =
       'Permission granted, loading recordings...';
   static const String refreshTooltip = 'Refresh';

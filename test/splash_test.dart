@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cll_upld/widgets/splash.dart';
+import 'package:cll_upld/pages/splash.dart';
 
 void main() {
   group('SplashScreen Unit Tests', () {

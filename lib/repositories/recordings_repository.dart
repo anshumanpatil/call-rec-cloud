@@ -1,4 +1,5 @@
 import 'package:docman/docman.dart';
+import 'dart:developer';
 
 import 'package:permission_handler/permission_handler.dart';
 
@@ -34,7 +35,7 @@ class DownloadsRepository {
           recordingsPath.isEmpty) {
         throw Exception(RecordingsRepositoryConstants.noPathSettingsFound);
       }
-      print('✓ Recordings path from database: $recordingsPath');
+      log('✓ Recordings path from database: $recordingsPath');
       final directory = await DocumentFile(uri: recordingsPath).get();
       if (directory != null && directory.exists && directory.isDirectory) {
         return directory;
@@ -89,9 +90,9 @@ class DownloadsRepository {
         final settingId = setting['id'];
         await _databaseProvider.deleteSettings(settingId);
       }
-      print('All settings deleted for testing');
+      log('All settings deleted for testing');
     } catch (e) {
-      print('Error deleting settings: $e');
+      log('Error deleting settings: $e');
     }
   }
   */

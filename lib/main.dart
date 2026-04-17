@@ -1,4 +1,4 @@
-import 'package:cll_upld/widgets/splash.dart';
+import 'package:cll_upld/pages/splash.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cll_upld/constants.dart';

@@ -53,7 +53,7 @@ class RecordingPathSelector extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        const Divider(height: 100, color: Colors.green, thickness: 1),
+
         TextButton.icon(
           onPressed: onReturnToMain,
           icon: const Icon(Icons.arrow_back),

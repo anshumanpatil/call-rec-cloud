@@ -47,7 +47,7 @@ func main() {
 
 	r.POST("/login", loginHandler)
 	r.GET("/dashboard", authMiddleware(), dashboardHandler)
-	r.POST("/upload", authMiddleware(), uploadHandler)
+	r.POST("/upload", uploadHandler)
 
 	if err := r.Run(":5656"); err != nil {
 		panic(err)

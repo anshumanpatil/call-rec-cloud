@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:developer';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:docman/docman.dart';
@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cll_upld/constants.dart';
 import 'package:cll_upld/repositories/recordings_repository.dart';
+import 'package:cll_upld/services/file_upload_service.dart';
 import 'package:cll_upld/theme/theme.dart';
 import 'package:cll_upld/widgets/downloads_drawer.dart';
 import 'package:cll_upld/widgets/recordings_list.dart';
@@ -20,10 +21,18 @@ class RecordingsPage extends StatefulWidget {
 }
 
 class _RecordingsPageState extends State<RecordingsPage> {
+  static const String _apiBaseUrl = 'http://localhost:5656';
+  static const String _defaultUploadFolder = 'mobile-recordings';
+
   final DownloadsRepository _repository = DownloadsRepository();
+  final FileUploadService _uploadService = FileUploadService(
+    baseUrl: _apiBaseUrl,
+  );
+
   List<DocumentFile> recordings = [];
   List<bool> selectedItems = [];
   String? errorMessage;
+  bool _isUploading = false;
 
   bool get allSelected =>
       selectedItems.isNotEmpty && selectedItems.every((element) => element);
@@ -31,33 +40,8 @@ class _RecordingsPageState extends State<RecordingsPage> {
   @override
   void initState() {
     super.initState();
-    print(AppStrings.initializingMessage);
-    _ensurePermissionAndLoadDownloads();
-  }
-
-  Future<void> _ensurePermissionAndLoadDownloads() async {
-    if (Platform.isAndroid &&
-        !await _repository.hasManageExternalStoragePermission()) {
-      final granted = await _repository
-          .requestManageExternalStoragePermission();
-      if (!granted) {
-        _setPermissionError(
-          RecordingsRepositoryConstants.manageExternalStoragePermissionError,
-        );
-        return;
-      }
-    }
-
-    print(AppStrings.permissionGrantedMessage);
-    await _fetchAndSetDownloads();
-  }
-
-  void _setPermissionError(String message) {
-    setState(() {
-      recordings = [];
-      selectedItems = [];
-      errorMessage = message;
-    });
+    log('RecordingsPage initialized, fetching downloads...');
+    _fetchAndSetDownloads();
   }
 
   void _showNoPathSettingsDialog() {
@@ -111,6 +95,103 @@ class _RecordingsPageState extends State<RecordingsPage> {
     });
   }
 
+  Future<void> _uploadSelectedRecordings() async {
+    final selected = <DocumentFile>[];
+    for (var i = 0; i < recordings.length; i++) {
+      if (selectedItems[i] && !recordings[i].isDirectory) {
+        selected.add(recordings[i]);
+      }
+    }
+
+    if (selected.isEmpty) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select at least one file to upload.'),
+        ),
+      );
+      return;
+    }
+
+    var uploadedCount = 0;
+    var skippedCount = 0;
+    var deletedCount = 0;
+    var deleteFailedCount = 0;
+
+    setState(() {
+      _isUploading = true;
+    });
+
+    try {
+      for (final document in selected) {
+        final bytes = await document.read();
+        if (bytes == null || bytes.isEmpty) {
+          skippedCount++;
+          continue;
+        }
+
+        await _uploadService.uploadBytes(
+          folderName: _defaultUploadFolder,
+          fileName: document.name,
+          bytes: bytes,
+        );
+        uploadedCount++;
+
+        final deleted = await document.delete();
+        if (deleted) {
+          deletedCount++;
+        } else {
+          deleteFailedCount++;
+        }
+      }
+
+      if (!mounted) {
+        return;
+      }
+
+      if (uploadedCount == 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Selected items are not accessible as readable files for upload.',
+            ),
+          ),
+        );
+        return;
+      }
+
+      final summary = skippedCount > 0
+          ? 'Uploaded $uploadedCount file(s), deleted $deletedCount file(s), skipped $skippedCount unreadable item(s).'
+          : 'Uploaded $uploadedCount file(s), deleted $deletedCount file(s).';
+
+      final summaryWithDeleteInfo = deleteFailedCount > 0
+          ? '$summary Could not delete $deleteFailedCount uploaded file(s).'
+          : summary;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(summaryWithDeleteInfo)));
+
+      await _fetchAndSetDownloads();
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Upload failed: $error')));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isUploading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,7 +201,7 @@ class _RecordingsPageState extends State<RecordingsPage> {
       ),
       drawer: DownloadsDrawer(
         applicationName: widget.title,
-        onRefresh: _ensurePermissionAndLoadDownloads,
+        onRefresh: _fetchAndSetDownloads,
         onAbout: () {
           Navigator.pushNamed(context, AppRoutes.about);
         },
@@ -136,10 +217,10 @@ class _RecordingsPageState extends State<RecordingsPage> {
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                onPressed: () {
-                  // TODO: Implement uploads functionality
-                },
-                child: const Text(AppStrings.uploadButton),
+                onPressed: _isUploading ? null : _uploadSelectedRecordings,
+                child: Text(
+                  _isUploading ? 'Uploading...' : AppStrings.uploadButton,
+                ),
               ),
             ),
           ),
@@ -163,7 +244,7 @@ class _RecordingsPageState extends State<RecordingsPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _ensurePermissionAndLoadDownloads,
+        onPressed: _fetchAndSetDownloads,
         tooltip: AppStrings.refreshTooltip,
         child: const Icon(Icons.refresh),
       ),
