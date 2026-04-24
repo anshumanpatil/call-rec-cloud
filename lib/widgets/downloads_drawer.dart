@@ -30,14 +30,14 @@ class DownloadsDrawer extends StatelessWidget {
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.refresh),
-            title: const Text(AppStrings.refreshDownloadsMenu),
-            onTap: () {
-              Navigator.pop(context);
-              onRefresh();
-            },
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.refresh),
+          //   title: const Text(AppStrings.refreshDownloadsMenu),
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //     onRefresh();
+          //   },
+          // ),
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text(AppStrings.aboutMenu),

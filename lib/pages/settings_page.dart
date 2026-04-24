@@ -157,6 +157,9 @@ class _SettingsPageState extends State<SettingsPage> {
     try {
       await _saveSelectedPath(selectedPath);
     } catch (e) {
+      if (!mounted) {
+        return;
+      }
       _showStatusDialog(
         title: 'Save Failed',
         message: 'Unable to save selected path: $e',
@@ -165,11 +168,16 @@ class _SettingsPageState extends State<SettingsPage> {
       return;
     }
 
+    if (!mounted) {
+      return;
+    }
+
     _showStatusDialog(
       title: 'Folder Selected',
       message: 'Folder selected successfully.',
       dialogType: DialogType.success,
     );
+    Navigator.pushNamed(context, AppRoutes.home);
   }
 
   // Future<void> _sendTestNotification() async {

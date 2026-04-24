@@ -32,8 +32,8 @@ class AppStrings {
   static const String recordingsPathLabel = 'Recordings path';
 
   // Drawer Menu
-  static const String downloadsMenuTitle = 'Downloads Menu';
-  static const String refreshDownloadsMenu = 'Refresh Downloads';
+  static const String downloadsMenuTitle = 'Recordings Vault';
+  // static const String refreshDownloadsMenu = 'Refresh Downloads';
   static const String aboutMenu = 'About';
   static const String settingsMenu = 'Settings';
 
