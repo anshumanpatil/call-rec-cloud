@@ -32,11 +32,6 @@ class AboutUsPage extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 24),
-            TextButton.icon(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-              label: const Text(AppStrings.returnToMainButton),
-            ),
           ],
         ),
       ),

@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  admin-api:
+    build:
+      context: ./admin-api
+      dockerfile: Dockerfile
+    container_name: admin-api
+    ports:
+      - "5656:5656"
+    volumes:
+      - ./admin-api/uploads:/app/uploads
+    restart: unless-stopped
+
+  admin-gui:
+    build:
+      context: ./admin-gui
+      dockerfile: Dockerfile
+    container_name: admin-gui
+    ports:
+      - "3000:80"
+    depends_on:
+      - admin-api
+    restart: unless-stopped

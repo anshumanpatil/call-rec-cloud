@@ -4,8 +4,6 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:docman/docman.dart';
 import 'package:cll_upld/constants.dart';
 import 'package:cll_upld/repositories/settings_repository.dart';
-import 'package:cll_upld/services/database_provider.dart';
-import 'package:cll_upld/widgets/notification_settings_widget.dart';
 import 'package:cll_upld/theme/theme.dart';
 import 'package:cll_upld/widgets/recording_path_selector.dart';
 
@@ -18,18 +16,8 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   late TextEditingController _recordingsPathController;
-  late TextEditingController _notificationTitleController;
-  late TextEditingController _notificationBodyController;
   final SettingsRepository _settingsRepository = SettingsRepository();
-  final DatabaseProvider _databaseProvider = DatabaseProvider();
-  static const Set<String> _validRepeatIntervals = {
-    'hourly',
-    'daily',
-    'weekly',
-  };
-  String _selectedRepeatInterval = 'daily';
   String? _initialDirectory;
-  int? _notificationDetailsId;
 
   bool get _supportsDirectoryPicker {
     if (kIsWeb) {
@@ -125,6 +113,22 @@ class _SettingsPageState extends State<SettingsPage> {
     await _settingsRepository.saveSelectedPath(selectedPath);
   }
 
+  Future<void> _loadSavedRecordingsPath() async {
+    try {
+      final savedPath = await _settingsRepository.getSavedRecordingsPath();
+      if (!mounted || savedPath == null) {
+        return;
+      }
+
+      setState(() {
+        _recordingsPathController.text = savedPath;
+        _initialDirectory = savedPath;
+      });
+    } catch (_) {
+      // Keep settings page usable even if loading a saved path fails.
+    }
+  }
+
   Future<void> _openFolderSelector() async {
     if (!_supportsDirectoryPicker) {
       _showStatusDialog(
@@ -180,134 +184,16 @@ class _SettingsPageState extends State<SettingsPage> {
     Navigator.pushNamed(context, AppRoutes.home);
   }
 
-  // Future<void> _sendTestNotification() async {
-  //   try {
-  //     final log = await _localNotificationService
-  //         .sendImmediateTestNotification();
-  //     _showStatusDialog(
-  //       title: 'Notification Test',
-  //       message: log,
-  //       dialogType: DialogType.info,
-  //     );
-  //   } catch (e) {
-  //     _showStatusDialog(
-  //       title: 'Notification Test Failed',
-  //       message: '$e',
-  //       dialogType: DialogType.error,
-  //     );
-  //   }
-  // }
-
-  Future<void> _loadNotificationDetails() async {
-    final allDetails = await _databaseProvider.getAllNotificationDetails();
-    if (allDetails.isEmpty) {
-      final id = await _databaseProvider.createNotificationDetails(
-        title: 'Reminder',
-        body: 'upload files to storage',
-        repeatInterval: 'daily',
-      );
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _notificationDetailsId = id;
-        _notificationTitleController.text = 'Reminder';
-        _notificationBodyController.text = 'upload files to storage';
-        _selectedRepeatInterval = 'daily';
-      });
-      return;
-    }
-
-    final first = allDetails.first;
-    if (!mounted) {
-      return;
-    }
-    setState(() {
-      _notificationDetailsId = first['id'] as int?;
-      _notificationTitleController.text =
-          (first['title'] as String?) ?? 'Reminder';
-      _notificationBodyController.text =
-          (first['body'] as String?) ?? 'upload files to storage';
-      final dbInterval = (first['repeat_interval'] as String?)?.trim();
-      _selectedRepeatInterval = _normalizeRepeatInterval(dbInterval);
-    });
-  }
-
-  String _normalizeRepeatInterval(String? raw) {
-    if (raw == null) {
-      return 'daily';
-    }
-    final normalized = raw.trim().toLowerCase();
-    if (_validRepeatIntervals.contains(normalized)) {
-      return normalized;
-    }
-    return 'daily';
-  }
-
-  Future<void> _saveNotificationDetails() async {
-    final title = _notificationTitleController.text.trim();
-    final body = _notificationBodyController.text.trim();
-
-    if (title.isEmpty || body.isEmpty) {
-      _showStatusDialog(
-        title: 'Invalid Notification Details',
-        message: 'Title and body are required.',
-        dialogType: DialogType.warning,
-      );
-      return;
-    }
-
-    try {
-      if (_notificationDetailsId == null) {
-        final id = await _databaseProvider.createNotificationDetails(
-          title: title,
-          body: body,
-          repeatInterval: _selectedRepeatInterval,
-        );
-        if (!mounted) {
-          return;
-        }
-        setState(() {
-          _notificationDetailsId = id;
-        });
-      } else {
-        await _databaseProvider.updateNotificationDetails(
-          notificationId: _notificationDetailsId!,
-          title: title,
-          body: body,
-          repeatInterval: _selectedRepeatInterval,
-        );
-      }
-
-      _showStatusDialog(
-        title: 'Notification Details Saved',
-        message: 'Notification title and body updated successfully.',
-        dialogType: DialogType.success,
-      );
-    } catch (e) {
-      _showStatusDialog(
-        title: 'Save Failed',
-        message: 'Unable to save notification details: $e',
-        dialogType: DialogType.error,
-      );
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     _recordingsPathController = TextEditingController();
-    _notificationTitleController = TextEditingController();
-    _notificationBodyController = TextEditingController();
-    _loadNotificationDetails();
-    // _loadInitialDirectory();
+    _loadSavedRecordingsPath();
   }
 
   @override
   void dispose() {
     _recordingsPathController.dispose();
-    _notificationTitleController.dispose();
-    _notificationBodyController.dispose();
     super.dispose();
   }
 
@@ -324,26 +210,12 @@ class _SettingsPageState extends State<SettingsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              NotificationSettingsWidget(
-                notificationTitleController: _notificationTitleController,
-                notificationBodyController: _notificationBodyController,
-                selectedRepeatInterval: _selectedRepeatInterval,
-                onRepeatIntervalChanged: (value) {
-                  if (value == null) {
-                    return;
-                  }
-                  setState(() {
-                    _selectedRepeatInterval = _normalizeRepeatInterval(value);
-                  });
-                },
-                onSaveNotificationDetails: _saveNotificationDetails,
-              ),
-              const Divider(height: 100, color: Colors.green, thickness: 1),
               RecordingPathSelector(
                 recordingsPathController: _recordingsPathController,
                 onOpenFolder: _openFolderSelector,
                 onReturnToMain: () => Navigator.pop(context),
               ),
+              const Divider(height: 100, color: Colors.green, thickness: 1),
             ],
           ),
         ),

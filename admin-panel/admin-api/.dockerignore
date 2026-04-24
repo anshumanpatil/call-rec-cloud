@@ -1,0 +1,7 @@
+.git
+.gitignore
+admin-api
+uploads
+*.log
+*.tmp
+*.swp

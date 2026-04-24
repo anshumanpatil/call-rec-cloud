@@ -21,7 +21,6 @@ class AppStrings {
       'This app helps you browse your downloads directory in one place.';
   static const String aboutUsDescription2 =
       'You can refresh downloads, inspect files, and manage selections.';
-  static const String returnToMainButton = 'Return to main';
 
   // Settings Page
   static const String settingsHeading = 'Settings';

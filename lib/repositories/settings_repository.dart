@@ -26,4 +26,18 @@ class SettingsRepository {
       recordingsPath: selectedPath,
     );
   }
+
+  Future<String?> getSavedRecordingsPath() async {
+    final allSettings = await _databaseProvider.getAllSettings();
+    if (allSettings.isEmpty) {
+      return null;
+    }
+
+    final path = allSettings.first['recordings_path'] as String?;
+    if (path == null || path.trim().isEmpty) {
+      return null;
+    }
+
+    return path.trim();
+  }
 }

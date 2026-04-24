@@ -39,35 +39,11 @@ class DatabaseService {
         recordings_path TEXT
       )''',
     );
-
-    // Notification Details Table
-    await db.execute(
-      '''CREATE TABLE IF NOT EXISTS ${DatabaseConstants.notificationDetailsTable}(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        body TEXT NOT NULL,
-        repeat_interval TEXT NOT NULL DEFAULT '${DatabaseConstants.repeatIntervalDaily}'
-      )''',
-    );
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) {
-      await db.execute(
-        '''CREATE TABLE IF NOT EXISTS ${DatabaseConstants.notificationDetailsTable}(
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          title TEXT NOT NULL,
-          body TEXT NOT NULL
-        )''',
-      );
-    }
-
-    if (oldVersion < 3) {
-      await db.execute(
-        "ALTER TABLE ${DatabaseConstants.notificationDetailsTable} "
-        "ADD COLUMN ${DatabaseConstants.notificationRepeatInterval} TEXT NOT NULL "
-        "DEFAULT '${DatabaseConstants.repeatIntervalDaily}'",
-      );
+    if (oldVersion < 4) {
+      await db.execute('DROP TABLE IF EXISTS notificationDetails');
     }
   }
 
@@ -162,6 +138,5 @@ class DatabaseService {
   Future<void> clearAllTables() async {
     final db = await database;
     await db.delete(DatabaseConstants.settingsTable);
-    await db.delete(DatabaseConstants.notificationDetailsTable);
   }
 }

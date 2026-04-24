@@ -57,67 +57,6 @@ class DatabaseProvider {
     );
   }
 
-  // ===================== NOTIFICATION DETAILS OPERATIONS =====================
-
-  Future<int> createNotificationDetails({
-    required String title,
-    required String body,
-    String repeatInterval = DatabaseConstants.repeatIntervalDaily,
-  }) async {
-    return await _databaseService
-        .insert(DatabaseConstants.notificationDetailsTable, {
-          DatabaseConstants.notificationTitle: title,
-          DatabaseConstants.notificationBody: body,
-          DatabaseConstants.notificationRepeatInterval: repeatInterval,
-        });
-  }
-
-  Future<Map<String, dynamic>?> getNotificationDetailsById(
-    int notificationId,
-  ) async {
-    return await _databaseService.queryOne(
-      DatabaseConstants.notificationDetailsTable,
-      where: '${DatabaseConstants.notificationId} = ?',
-      whereArgs: [notificationId],
-    );
-  }
-
-  Future<List<Map<String, dynamic>>> getAllNotificationDetails() async {
-    return await _databaseService.query(
-      DatabaseConstants.notificationDetailsTable,
-      orderBy: '${DatabaseConstants.notificationId} ASC',
-    );
-  }
-
-  Future<int> updateNotificationDetails({
-    required int notificationId,
-    String? title,
-    String? body,
-    String? repeatInterval,
-  }) async {
-    final data = <String, dynamic>{};
-    if (title != null) {
-      data[DatabaseConstants.notificationTitle] = title;
-    }
-    if (body != null) {
-      data[DatabaseConstants.notificationBody] = body;
-    }
-    if (repeatInterval != null) {
-      data[DatabaseConstants.notificationRepeatInterval] = repeatInterval;
-    }
-
-    if (data.isEmpty) {
-      return 0;
-    }
-
-    return await _databaseService.update(
-      DatabaseConstants.notificationDetailsTable,
-      data,
-      where: '${DatabaseConstants.notificationId} = ?',
-      whereArgs: [notificationId],
-    );
-  }
-
   // ===================== UTILITY OPERATIONS =====================
 
   Future<void> clearDatabase() async {

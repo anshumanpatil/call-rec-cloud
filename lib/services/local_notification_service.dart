@@ -1,21 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import 'database_constants.dart';
-import 'database_provider.dart';
-
 class LocalNotificationService {
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
-  final DatabaseProvider _databaseProvider = DatabaseProvider();
   bool _isInitialized = false;
 
   static const int _uploadReminderId = 1001;
   static const int _testNotificationId = 1002;
   static const String _defaultNotificationTitle = 'Reminder';
   static const String _defaultNotificationBody = 'upload files to storage';
-  static const String _defaultNotificationRepeatInterval =
-      DatabaseConstants.repeatIntervalDaily;
+  static const String _defaultNotificationRepeatInterval = 'daily';
   static const String _channelId = 'upload_reminders_channel';
   static const String _channelName = 'Upload Reminders';
   static const String _channelDescription =
@@ -122,11 +117,9 @@ class LocalNotificationService {
     }
 
     final content = await _getNotificationContent();
-    log.writeln('- Reminder title from DB: ${content.title}');
-    log.writeln('- Reminder body from DB: ${content.body}');
-    log.writeln(
-      '- Reminder repeat interval from DB: ${content.repeatInterval}',
-    );
+    log.writeln('- Reminder title: ${content.title}');
+    log.writeln('- Reminder body: ${content.body}');
+    log.writeln('- Reminder repeat interval: ${content.repeatInterval}');
 
     await _plugin.cancel(id: _uploadReminderId);
     log.writeln('- Cleared existing periodic reminder notification id.');
@@ -175,8 +168,8 @@ class LocalNotificationService {
     }
 
     final content = await _getNotificationContent();
-    log.writeln('- Test title from DB: ${content.title}');
-    log.writeln('- Test body from DB: ${content.body}');
+    log.writeln('- Test title: ${content.title}');
+    log.writeln('- Test body: ${content.body}');
 
     await _plugin.cancel(id: _testNotificationId);
     await _plugin.show(
@@ -196,51 +189,20 @@ class LocalNotificationService {
 
   Future<({String title, String body, String repeatInterval})>
   _getNotificationContent() async {
-    final allRecords = await _databaseProvider.getAllNotificationDetails();
-    if (allRecords.isEmpty) {
-      await _databaseProvider.createNotificationDetails(
-        title: _defaultNotificationTitle,
-        body: _defaultNotificationBody,
-        repeatInterval: _defaultNotificationRepeatInterval,
-      );
-      return (
-        title: _defaultNotificationTitle,
-        body: _defaultNotificationBody,
-        repeatInterval: _defaultNotificationRepeatInterval,
-      );
-    }
-
-    final first = allRecords.first;
-    final title = (first['title'] as String?)?.trim();
-    final body = (first['body'] as String?)?.trim();
-    final repeatInterval = (first['repeat_interval'] as String?)
-        ?.trim()
-        .toLowerCase();
-
     return (
-      title: (title == null || title.isEmpty)
-          ? _defaultNotificationTitle
-          : title,
-      body: (body == null || body.isEmpty) ? _defaultNotificationBody : body,
-      repeatInterval: _normalizeRepeatInterval(repeatInterval),
+      title: _defaultNotificationTitle,
+      body: _defaultNotificationBody,
+      repeatInterval: _defaultNotificationRepeatInterval,
     );
-  }
-
-  String _normalizeRepeatInterval(String? repeatInterval) {
-    if (repeatInterval == DatabaseConstants.repeatIntervalHourly ||
-        repeatInterval == DatabaseConstants.repeatIntervalWeekly) {
-      return repeatInterval!;
-    }
-    return DatabaseConstants.repeatIntervalDaily;
   }
 
   RepeatInterval _mapRepeatInterval(String repeatInterval) {
     switch (repeatInterval) {
-      case DatabaseConstants.repeatIntervalHourly:
+      case 'hourly':
         return RepeatInterval.hourly;
-      case DatabaseConstants.repeatIntervalWeekly:
+      case 'weekly':
         return RepeatInterval.weekly;
-      case DatabaseConstants.repeatIntervalDaily:
+      case 'daily':
       default:
         return RepeatInterval.daily;
     }
