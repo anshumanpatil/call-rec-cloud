@@ -12,9 +12,14 @@ import 'package:cll_upld/widgets/downloads_drawer.dart';
 import 'package:cll_upld/widgets/recordings_list.dart';
 
 class RecordingsPage extends StatefulWidget {
-  const RecordingsPage({super.key, required this.title});
+  const RecordingsPage({
+    super.key,
+    required this.title,
+    this.initialFileNames = const [],
+  });
 
   final String title;
+  final List<String> initialFileNames;
 
   @override
   State<RecordingsPage> createState() => _RecordingsPageState();
@@ -40,6 +45,11 @@ class _RecordingsPageState extends State<RecordingsPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.initialFileNames.isNotEmpty) {
+      log(
+        'Prefetched filenames from splash: ${widget.initialFileNames.length}',
+      );
+    }
     log('RecordingsPage initialized, fetching downloads...');
     _fetchAndSetDownloads();
   }
@@ -228,7 +238,17 @@ class _RecordingsPageState extends State<RecordingsPage> {
             child: errorMessage != null
                 ? Center(child: Text(errorMessage!))
                 : recordings.isEmpty
-                ? const Center(child: CircularProgressIndicator())
+                ? (widget.initialFileNames.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: widget.initialFileNames.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              leading: const Icon(Icons.audiotrack),
+                              title: Text(widget.initialFileNames[index]),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()))
                 : RecordingsListView(
                     recordings: recordings,
                     selectedItems: selectedItems,

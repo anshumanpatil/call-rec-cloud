@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:docman/docman.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cll_upld/constants.dart';
 import 'package:cll_upld/repositories/recordings_repository.dart';
+import 'package:cll_upld/repositories/settings_repository.dart';
+import 'package:cll_upld/pages/recordings_page.dart';
 import 'package:cll_upld/theme/theme.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,6 +19,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final DownloadsRepository _repository = DownloadsRepository();
+  final SettingsRepository _settingsRepository = SettingsRepository();
 
   @override
   void initState() {
@@ -23,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     _bootstrap();
   }
 
-  Future<void> _ensurePermissionAndLoadDownloads() async {
+  Future<List<DocumentFile>> _ensurePermissionAndLoadDownloads() async {
     if (Platform.isAndroid &&
         !await _repository.hasManageExternalStoragePermission()) {
       final granted = await _repository
@@ -35,18 +39,42 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     }
 
-    await _repository.fetchDownloads();
+    return await _repository.fetchDownloads();
   }
 
   Future<void> _bootstrap() async {
     await Future<void>.delayed(const Duration(seconds: 3));
 
+    final savedPath = await _settingsRepository.getSavedRecordingsPath();
+    if (!mounted) {
+      return;
+    }
+
+    if (savedPath == null) {
+      Navigator.pushReplacementNamed(context, AppRoutes.settings);
+      return;
+    }
+
     try {
-      await _ensurePermissionAndLoadDownloads();
+      final downloads = await _ensurePermissionAndLoadDownloads();
+      final fileNames = downloads
+          .where((document) => !document.isDirectory)
+          .map((document) => document.name)
+          .toList();
+
       if (!mounted) {
         return;
       }
-      Navigator.pushReplacementNamed(context, AppRoutes.home);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RecordingsPage(
+            title: RecordingsRepositoryConstants.homeTitle,
+            initialFileNames: fileNames,
+          ),
+        ),
+      );
     } catch (error) {
       if (!mounted) {
         return;
