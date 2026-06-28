@@ -1,6 +1,6 @@
 # CLL Upload
 
-A Flutter application for managing workout recordings and downloads.
+A Flutter application for managing workout recordings and downloads....
 
 ## Prerequisites
 
